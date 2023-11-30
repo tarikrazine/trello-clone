@@ -24,7 +24,7 @@ function FormSubmit({
   children,
   className,
   disabled,
-  variant,
+  variant = "primary",
   size,
 }: FormSubmitProps) {
   const { pending } = useFormStatus();
