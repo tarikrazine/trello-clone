@@ -43,7 +43,7 @@ function FormPopover({
       console.log(data);
       toast.success("Board created!");
       closeRef.current?.click();
-      router.push(`/board/${data.id}`);
+      router.push(`/boards/${data.id}`);
     },
     onError(error) {
       console.log(error);
