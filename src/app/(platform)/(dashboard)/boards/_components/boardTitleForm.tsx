@@ -3,9 +3,12 @@
 import { ElementRef, useRef, useState } from "react";
 
 import { Board } from "@prisma/client";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import FormInput from "@/components/form/formInput";
+import { useAction } from "@/hooks/useAction";
+import { updateBoard } from "@/actions/updateBoard";
 
 interface BoardTitleFormProps {
   data: Board;
@@ -17,6 +20,18 @@ function BoardTitleForm({ data }: BoardTitleFormProps) {
   const inputRef = useRef<ElementRef<"input">>(null);
 
   const [isEditing, setIsEditing] = useState(false);
+  const [title, setTitle] = useState(data.title);
+
+  const { execute, fieldErrors } = useAction(updateBoard, {
+    onSuccess(data) {
+      toast.success("Board Updated successfully");
+      setTitle(data.title);
+      disableEditing();
+    },
+    onError(data) {
+      toast.error(data);
+    },
+  });
 
   function disableEditing() {
     setIsEditing(false);
@@ -31,9 +46,9 @@ function BoardTitleForm({ data }: BoardTitleFormProps) {
   }
 
   function onSubmit(formData: FormData) {
-    const title = formData.get("title");
+    const title = formData.get("title") as string;
 
-    console.log(title);
+    execute({ id: data.id, title });
   }
 
   function onBlur() {
@@ -50,9 +65,10 @@ function BoardTitleForm({ data }: BoardTitleFormProps) {
         <FormInput
           id="title"
           onBlur={onBlur}
-          defaultValue={data.title}
+          defaultValue={title}
           className="h-7 border-none bg-transparent px-[7px] py-1 text-lg font-bold focus-visible:outline-none focus-visible:ring-transparent"
           ref={inputRef}
+          errors={fieldErrors}
         />
       </form>
     );
@@ -64,7 +80,7 @@ function BoardTitleForm({ data }: BoardTitleFormProps) {
       className="h-auto w-auto p-1 px-2 text-lg font-bold"
       onClick={enableEditing}
     >
-      {data.title}
+      {title}
     </Button>
   );
 }
