@@ -6,6 +6,10 @@ interface FormErrorsProps {
 }
 
 function FormErrors({ id, errors }: FormErrorsProps) {
+  if (!errors) {
+    return null;
+  }
+
   return (
     <div
       id={`${id}-error`}
