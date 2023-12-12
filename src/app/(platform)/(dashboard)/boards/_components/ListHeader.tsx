@@ -7,9 +7,11 @@ import { List } from "@prisma/client";
 import { useEventListener } from "usehooks-ts";
 import { toast } from "sonner";
 
-import { updateList } from "@/actions/updateList";
-import FormInput from "@/components/form/formInput";
 import { useAction } from "@/hooks/useAction";
+import { updateList } from "@/actions/updateList";
+
+import FormInput from "@/components/form/formInput";
+import ListOptions from "./listOptions";
 
 interface ListHeaderProps {
   data: List;
@@ -98,6 +100,7 @@ function ListHeader({ data }: ListHeaderProps) {
           {title}
         </div>
       )}
+      <ListOptions data={data} onAddCard={() => {}} />
     </div>
   );
 }
