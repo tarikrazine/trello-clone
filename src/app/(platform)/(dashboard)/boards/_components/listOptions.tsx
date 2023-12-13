@@ -69,7 +69,7 @@ function ListOptions({ data, onAddCard }: ListOptionsProps) {
     <Popover>
       <PopoverTrigger asChild>
         <Button className="h-auto w-auto p-2" variant="ghost">
-          <MoreHorizontal className="h-3 w-3 cursor-pointer" />
+          <MoreHorizontal className="h-4 w-4 cursor-pointer" />
         </Button>
       </PopoverTrigger>
       <PopoverContent
