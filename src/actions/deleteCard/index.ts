@@ -7,7 +7,7 @@ import { auth } from "@clerk/nextjs";
 import { InputType, ReturnType } from "./types";
 import { db } from "@/lib/db";
 import { createSafeAction } from "@/lib/create-safe-action";
-import { updateCardSchema } from "./schema";
+import { deleteCardSchema } from "./schema";
 
 async function handler(data: InputType): Promise<ReturnType> {
   const { userId, orgId } = auth();
@@ -18,12 +18,12 @@ async function handler(data: InputType): Promise<ReturnType> {
     };
   }
 
-  const { boardId, id, ...rest } = data;
+  const { id, boardId } = data;
 
   let card;
 
   try {
-    card = await db.card.update({
+    const cardToCopy = await db.card.findUnique({
       where: {
         id,
         list: {
@@ -32,16 +32,27 @@ async function handler(data: InputType): Promise<ReturnType> {
           },
         },
       },
-      data: {
-        ...rest,
-      },
-      include: {
-        list: true,
+    });
+
+    if (!cardToCopy) {
+      return {
+        error: "Card not found",
+      };
+    }
+
+    card = await db.card.delete({
+      where: {
+        id,
+        list: {
+          board: {
+            orgId,
+          },
+        },
       },
     });
   } catch (error) {
     return {
-      error: "Failed to create.",
+      error: "Failed to Delete",
     };
   }
 
@@ -52,4 +63,4 @@ async function handler(data: InputType): Promise<ReturnType> {
   };
 }
 
-export const updateCard = createSafeAction(updateCardSchema, handler);
+export const deleteCard = createSafeAction(deleteCardSchema, handler);
