@@ -5,6 +5,7 @@ import { useCardModalStore } from "@/hooks/useCardModal";
 import { fetcher } from "@/lib/fetcher";
 import { CardWithList } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import Header from "./header";
 
 function CardModal() {
   const id = useCardModalStore((state) => state.id);
@@ -19,7 +20,7 @@ function CardModal() {
   return (
     <Dialog open={isOpen}>
       <DialogContent>
-        <h1>Card Modal</h1>
+        {!dataCard ? <Header.Skeleton /> : <Header data={dataCard} />}
       </DialogContent>
     </Dialog>
   );
